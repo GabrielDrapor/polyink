@@ -1,0 +1,17 @@
+.App {
+  text-align: left;
+}
+
+.title-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.clickable-title {
+  cursor: pointer;
+}

@@ -1,0 +1,49 @@
+{
+  "name": "polyink",
+  "version": "1.0.0",
+  "description": "A bilingual reader application",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "convert-epub": "ts-node src/cli/convert-epub.ts"
+  },
+  "keywords": [
+    "react",
+    "bilingual",
+    "reader"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "epub2": "^3.0.2",
+    "jszip": "^3.10.1",
+    "openai": "^5.10.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "xmldom": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "dotenv": "^17.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
