@@ -15,13 +15,22 @@ export class LLMTranslator {
     if (key) {
       this.openai = new OpenAI({
         apiKey: key,
-        baseURL: process.env.OPENAI_API_BASE_URL || "https://generativelanguage.googleapis.com/v1beta/openai/"
+        baseURL:
+          process.env.OPENAI_API_BASE_URL ||
+          'https://generativelanguage.googleapis.com/v1beta/openai/',
       });
     }
   }
 
-  async translateText(text: string, options: TranslationOptions = {}): Promise<string> {
-    const { sourceLanguage = 'English', targetLanguage = 'Chinese', model = 'gemini-1.5-flash' } = options;
+  async translateText(
+    text: string,
+    options: TranslationOptions = {}
+  ): Promise<string> {
+    const {
+      sourceLanguage = 'English',
+      targetLanguage = 'Chinese',
+      model = 'gemini-1.5-flash',
+    } = options;
 
     // Use actual LLM API if available
     if (this.openai) {
@@ -30,15 +39,15 @@ export class LLMTranslator {
           model: model,
           messages: [
             {
-              role: "system",
-              content: `You are a professional translator. Translate the following text from ${sourceLanguage} to ${targetLanguage}. Provide only the translation without any explanations or notes.`
+              role: 'system',
+              content: `You are a professional translator. Translate the following text from ${sourceLanguage} to ${targetLanguage}. Provide only the translation without any explanations or notes.`,
             },
             {
-              role: "user",
-              content: text
-            }
+              role: 'user',
+              content: text,
+            },
           ],
-          max_tokens: 1000
+          max_tokens: 1000,
         });
 
         const translation = response.choices[0]?.message?.content?.trim();
@@ -62,7 +71,7 @@ export class LLMTranslator {
       'the cases which come to light': '被揭露的案件',
       'as a rule': '通常',
       'bald enough': '足够直白',
-      'vulgar enough': '足够庸俗'
+      'vulgar enough': '足够庸俗',
     };
 
     if (text.length < 50) {
@@ -77,7 +86,7 @@ export class LLMTranslator {
   }
 
   async translateBatch(
-    texts: string[], 
+    texts: string[],
     options: TranslationOptions = {},
     onProgress?: (progress: number) => void
   ): Promise<string[]> {
@@ -91,18 +100,18 @@ export class LLMTranslator {
     for (let i = 0; i < texts.length; i += batchSize) {
       const batch = texts.slice(i, i + batchSize);
       const batchResults = await Promise.all(
-        batch.map(text => this.translateText(text, options))
+        batch.map((text) => this.translateText(text, options))
       );
       results.push(...batchResults);
-      
+
       if (onProgress) {
         const progress = Math.round(((i + batchSize) / texts.length) * 100);
         onProgress(Math.min(100, progress));
       }
-      
+
       // Small delay between batches if using API
       if (this.openai && i + batchSize < texts.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 

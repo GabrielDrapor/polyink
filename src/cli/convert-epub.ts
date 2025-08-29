@@ -7,9 +7,11 @@ config();
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length < 1) {
-    console.error('Usage: npm run convert-epub <input.epub> [--output output.json]');
+    console.error(
+      'Usage: npm run convert-epub <input.epub> [--output output.json]'
+    );
     process.exit(1);
   }
 
@@ -29,7 +31,7 @@ async function main() {
 
   try {
     console.log(`Converting ${inputPath} to bilingual JSON...`);
-    
+
     const converter = new EPUBConverter();
 
     const onProgress = (progress: number) => {
@@ -43,13 +45,12 @@ async function main() {
     const savedPath = await converter.saveBilingualJSON(inputPath, outputPath, {
       sourceLanguage: 'English',
       targetLanguage: 'Chinese',
-      onProgress
+      onProgress,
     });
 
     process.stdout.write('\n'); // Newline after progress bar
     console.log(`✅ Successfully converted and saved to: ${savedPath}`);
     console.log(`📖 Content is ready for the bilingual reader!`);
-    
   } catch (error) {
     console.error('❌ Error converting EPUB:', error);
     process.exit(1);

@@ -8,7 +8,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "convert-epub": "ts-node src/cli/convert-epub.ts"
+    "convert-epub": "ts-node src/cli/convert-epub.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deploy": "npm run build && wrangler pages deploy build",
+    "preview": "wrangler pages dev build"
   },
   "keywords": [
     "react",
@@ -31,8 +35,10 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "dotenv": "^17.2.1",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "wrangler": "^4.33.1"
   },
   "browserslist": {
     "production": [
