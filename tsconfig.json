@@ -6,6 +6,7 @@
       "dom.iterable",
       "es6"
     ],
+    "types": ["@cloudflare/workers-types"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

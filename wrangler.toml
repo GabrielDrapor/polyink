@@ -1,6 +1,15 @@
 name = "polyink"
+main = "src/worker/index.ts"
 compatibility_date = "2023-12-01"
-pages_build_output_dir = "build"
 
-[env.production]
-compatibility_date = "2023-12-01"
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./build"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "polyink-db"
+database_id = "your-database-id-here"
