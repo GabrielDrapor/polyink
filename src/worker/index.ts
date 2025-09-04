@@ -107,13 +107,31 @@ async function getChapterContent(db: D1Database, chapterNumber: number, bookUuid
   };
 }
 
+async function getAllBooks(db: D1Database) {
+  const books = await db.prepare(`
+    SELECT id, uuid, title, original_title, author, language_pair, created_at, updated_at
+    FROM books
+    ORDER BY created_at DESC
+  `).all();
+
+  return books.results;
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     
-    // Handle API routes for specific books
+    // Handle API routes
     if (url.pathname.startsWith('/api/')) {
       try {
+        // Handle books list endpoint
+        if (url.pathname === '/api/books') {
+          const books = await getAllBooks(env.DB);
+          return new Response(JSON.stringify(books), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+
         // Extract book UUID from API path: /api/book/:uuid/...
         const apiMatch = url.pathname.match(/^\/api\/book\/([^\/]+)\/(.+)$/);
         if (apiMatch) {
@@ -231,30 +249,27 @@ export default {
       }
     }
     
-    // Handle root URL - blank page
+    // Handle root URL - serve React app
     if (url.pathname === '/') {
-      return new Response(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>PolyInk</title>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-              body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-              .blank { color: #666; }
-            </style>
-          </head>
-          <body>
-            <div class="blank">
-              <h1>PolyInk</h1>
-              <p>Access books at /book/:book_id</p>
-            </div>
-          </body>
-        </html>
-      `, {
-        headers: { 'Content-Type': 'text/html' }
-      });
+      try {
+        return env.ASSETS.fetch(new Request(new URL('/index.html', request.url)));
+      } catch (error) {
+        return new Response(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>PolyInk - Library</title>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+            </head>
+            <body>
+              <div id="root">Loading PolyInk library...</div>
+            </body>
+          </html>
+        `, {
+          headers: { 'Content-Type': 'text/html' }
+        });
+      }
     }
     
     // Serve static assets

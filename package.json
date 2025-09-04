@@ -14,7 +14,7 @@
     "format:check": "prettier --check .",
     "deploy": "npm run build && wrangler deploy --config wrangler.toml.local",
     "dev:worker": "wrangler dev --config wrangler.toml.local",
-    "preview": "wrangler dev --local --config wrangler.toml.local",
+    "preview": "wrangler dev --local src/worker/index.ts --assets ./build",
     "db:local": "wrangler d1 execute polyink-db --local --command",
     "db:remote": "wrangler d1 execute polyink-db --remote --command",
     "generate-uuid": "node scripts/generate-uuid.js"

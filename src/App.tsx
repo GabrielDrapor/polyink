@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BilingualReader, { ContentItem } from './components/BilingualReader';
+import BookShelf from './components/BookShelf';
 import './App.css';
 
 interface BookContent {
@@ -24,6 +25,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [currentChapter, setCurrentChapter] = useState(1);
   const [bookUuid, setBookUuid] = useState<string | null>(null);
+  const [showBookShelf, setShowBookShelf] = useState(false);
 
   const loadChapter = async (chapterNumber: number) => {
     if (!bookUuid) {
@@ -70,6 +72,11 @@ function App() {
     if (pathParts[1] === 'book' && pathParts[2]) {
       const uuid = pathParts[2];
       setBookUuid(uuid);
+      setShowBookShelf(false);
+    } else if (pathParts.length <= 2 && (pathParts[1] === '' || pathParts[1] === undefined)) {
+      // Root path - show book shelf
+      setShowBookShelf(true);
+      setLoading(false);
     } else {
       setError('Invalid book URL. Expected format: /book/:book_id');
       setLoading(false);
@@ -78,10 +85,31 @@ function App() {
 
   useEffect(() => {
     // Load first chapter when book UUID is available
-    if (bookUuid) {
+    if (bookUuid && !showBookShelf) {
       loadChapter(1);
     }
-  }, [bookUuid]);
+  }, [bookUuid, showBookShelf]);
+
+  const handleSelectBook = (uuid: string) => {
+    setBookUuid(uuid);
+    setShowBookShelf(false);
+    setBookContent(null);
+    setCurrentChapter(1);
+    setError(null);
+    setLoading(true);
+    
+    // Update URL
+    window.history.pushState({}, '', `/book/${uuid}`);
+  };
+
+  // Show book shelf on root path
+  if (showBookShelf) {
+    return (
+      <div className="App">
+        <BookShelf onSelectBook={handleSelectBook} />
+      </div>
+    );
+  }
 
   if (loading && !bookContent) {
     return (
