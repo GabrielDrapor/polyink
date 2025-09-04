@@ -257,8 +257,8 @@ const BilingualReader: React.FC<BilingualReaderProps> = ({
           );
         })}
         
-        {/* Next Chapter Button at bottom */}
-        {!isLoading && currentChapter <= totalChapters && (
+        {/* Next Chapter Button at bottom - only show if not on last chapter */}
+        {!isLoading && currentChapter < totalChapters && (
           <div className="chapter-navigation-bottom">
             <button 
               className="nav-button next-button"
